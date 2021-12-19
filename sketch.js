@@ -32,7 +32,6 @@ function preload(){
 class VoiceText{
     init(){
         this.textSizes = [30,20,10,30];
-        console.log(this.textSizes);
         this.Strs = ['き','ら','き','ら'];
         this.width = 200;
         this.cnt = 0; //テキストが今何文字まで書かれているか。
@@ -48,7 +47,7 @@ class VoiceText{
         let y = Math.floor((temp_sum / this.width));
         console.log(x);
         console.log(y);
-        text(this.Strs[n],x,y*100);
+        text(this.Strs[n],x,(y*100+100));
     }
 
     draw_all(){
