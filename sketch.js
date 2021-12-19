@@ -121,17 +121,16 @@ function draw(){
         let spectrum;
         if(!cnt%90){
             spectrum =fft.analyze();
+            console.log(spectrum);
         }
         //結果をグラフで描画
         stroke(255);
         noFill();
-        beginShape();
         for(let i =0; i <spectrum.length; i++) {
             let x = map(i, 0, spectrum.length-1, 0, width);
             let y = map(spectrum[i], 0, 255, height, 0);
-            vertex(x, y);
+            rect(x*20,10,20,y);
         }
-        endShape();
 
         alpha = 122.5 + 122.5*sin(pi/(5*index));
         textSize(20);
