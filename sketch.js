@@ -118,12 +118,15 @@ function draw(){
     if(mode == 0){
 
         //FFT解析
-        let spectrum =fft.analyze();
+        let spectrum;
+        if(!cnt%90){
+            spectrum =fft.analyze();
+        }
         //結果をグラフで描画
         stroke(255);
         noFill();
         beginShape();
-        for(i =0; i <spectrum.length; i++) {
+        for(let i =0; i <spectrum.length; i++) {
             let x = map(i, 0, spectrum.length-1, 0, width);
             let y = map(spectrum[i], 0, 255, height, 0);
             vertex(x, y);
