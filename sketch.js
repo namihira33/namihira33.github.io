@@ -70,9 +70,9 @@ function setup(){
     let canvas = createCanvas(1280,800);
     canvas.parent('result');
     init();
-    sound.play();
-    //fft = new p5.FFT();
-    //fft.setInput(sound);
+    sound.loop();
+    fft = new p5.FFT();
+    fft.setInput(sound);
     frameRate(30);
 }
 
@@ -117,19 +117,19 @@ function draw(){
     //mode0ならタイトル画面
     if(mode == 0){
 
-        //background(0);
-        //stroke(255);
-        //noFill();
+        background(0);
+        stroke(255);
+        noFill();
         //FFT解析
-        //let spectrum =fft.analyze();
+        let spectrum =fft.analyze();
         //結果をグラフで描画
-        /*beginShape();
+        beginShape();
         for(i =0; i <spectrum.length; i++) {
         let x = map(i, 0, spectrum.length-1, 0, width);
         let y = map(spectrum[i], 0, 255, height, 0);
         vertex(x, y);
         }
-        endShape(); */
+        endShape();
         /*
         alpha = 122.5 + 122.5*sin(pi/(5*index));
         textSize(20);
