@@ -71,8 +71,8 @@ function setup(){
     canvas.parent('result');
     init();
     sound.loop();
-    fft = new p5.FFT();
-    fft.setInput(sound);
+    //fft = new p5.FFT();
+    //fft.setInput(sound);
     frameRate(30);
 }
 
@@ -121,15 +121,15 @@ function draw(){
         stroke(255);
         noFill();
         //FFT解析
-        let spectrum =fft.analyze();
+        //let spectrum =fft.analyze();
         //結果をグラフで描画
-        beginShape();
+        /*beginShape();
         for(i =0; i <spectrum.length; i++) {
         let x = map(i, 0, spectrum.length-1, 0, width);
         let y = map(spectrum[i], 0, 255, height, 0);
         vertex(x, y);
         }
-        endShape();
+        endShape(); */
         /*
         alpha = 122.5 + 122.5*sin(pi/(5*index));
         textSize(20);
