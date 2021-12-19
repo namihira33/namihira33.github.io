@@ -3,7 +3,7 @@ let dish_images = new Array(5);
 let mask_images = new Array(5);
 let bgs = new Array(2);
 let mode;
-let cnt,recframe;
+let cnt;
 let xhr;
 let heartrate;
 let sushi_clicked = [0,0,0,0,0];
