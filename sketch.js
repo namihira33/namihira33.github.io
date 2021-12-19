@@ -39,7 +39,7 @@ class VoiceText{
 
     draw_n(n){
         let temp_sum = 0;
-        for(let i=0;i<n-1;i++){
+        for(let i=0;i<n;i++){
             temp_sum += this.textSizes[i];
         }
         textSize(this.textSizes[n]);
