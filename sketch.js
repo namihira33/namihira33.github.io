@@ -66,7 +66,7 @@ function init(){
     Vt.init();
     sound.loop();
     fft = new p5.FFT();
-    //fft.setInput(sound);
+    fft.setInput(sound);
 }
 
 function setup(){
@@ -117,18 +117,20 @@ function draw(){
     //mode0ならタイトル画面
     if(mode == 0){
 
+        background(0);
+        stroke(255);
+        noFill();
         //FFT解析
-        if(!(cnt%90)){
-            //spectrum =fft.analyze();
-            //console.log(spectrum);
-        }
+        let spectrum =fft.analyze();
         //結果をグラフで描画
-        //for(let i =0; i <spectrum.length; i++) {
-        //    let x = map(i, 0, spectrum.length-1, 0, width);
-        //    let y = map(spectrum[i], 0, 255, height, 0);
-        //    rect(x*2,10,2,y);
-        //}
-
+        beginShape();
+        for(i =0; i <spectrum.length; i++) {
+        let x = map(i, 0, spectrum.length-1, 0, width);
+        let y = map(spectrum[i], 0, 255, height, 0);
+        vertex(x, y);
+        }
+        endShape();
+        /*
         alpha = 122.5 + 122.5*sin(pi/(5*index));
         textSize(20);
         fill(0,0,0,alpha);
@@ -148,7 +150,7 @@ function draw(){
             x = reflect(x);
             let y = 200*sin(pi/360*x) + 400;
             image(sushi_images[i],x,y,50,50);
-        }
+        } */
     }
 
     //mode1なら寿司選択画面
