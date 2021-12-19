@@ -136,6 +136,8 @@ function init(){
     mode = 0;
     cnt = 0;
     recframe = 0;
+    str_size = 0;
+    result_string = '';
     textFont(myfont);
     xhr = new XMLHttpRequest();
     Vt = new VoiceText();
