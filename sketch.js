@@ -32,7 +32,7 @@ function preload(){
 class VoiceText{
     init(){
         this.textSizes = [30,20,10,30];
-        print(this.textSizes);
+        console.log(this.textSizes);
         this.Strs = ['き','ら','き','ら'];
         this.cnt = 0;
     }
