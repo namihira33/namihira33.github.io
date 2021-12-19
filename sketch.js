@@ -37,7 +37,7 @@ class VoiceText{
     }
 
     draw(){
-        let l = textSizes.length;
+        let l = this.textSizes.length;
         for(let i=0;i<l;i++){
             let x = 50+10*i;
             let y = 50+10*i;
