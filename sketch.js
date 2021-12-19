@@ -10,6 +10,7 @@ let sushi_names = [];
 let rectsize;
 let bg,star,tumami,heart,material,Vt,myfont,sound,fft,spectrum,myRec;
 let pi = 3.14159;
+let temp = [];
 
 function parseResult() {
 
@@ -26,6 +27,7 @@ function parseResult() {
     text(resultString,30,30+cnt*25,width-30,height-30);
     var str_size = myRec.resultString.length;
     console.log(str_size);
+    console.log(temp);
   
   
     // javascript native な記述
