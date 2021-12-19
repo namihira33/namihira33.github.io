@@ -100,3 +100,18 @@ hr {
 input, select {
     vertical-align:middle;
 }
+
+@font-face {
+    font-family: 'DIN Alternate Bold';
+    font-style: normal;
+    font-weight: normal;
+    src: local('DIN Alternate Bold'), url('fonts/DINAlternate-Bold.woff') format('woff');
+    }
+
+@font-face {
+    font-family : 'SawarabiGothic-Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: url('fonts/SawarabiGothic-Regular.ttf');
+
+}

@@ -8,7 +8,7 @@ let heartrate;
 let sushi_clicked = [0,0,0,0,0];
 let sushi_names = [];
 let rectsize;
-let bg,star,tumami,heart,material;;
+let bg,star,tumami,heart,material,Vt;
 let pi = 3.14159;
 
 function preload(){
@@ -26,19 +26,39 @@ function preload(){
     tumami = loadImage('images/tumami.png');
     star = loadImage('images/star.png');
     material = loadImage('images/material.png');
+    textFont('SawarabiGothic-Regular');
+}
+
+class VoiceText{
+    init(){
+        this.textSizes = [30,20,10,30];
+        this.Strs = ['き','ら','き','ら'];
+        this.cnt = 0;
+    }
+
+    draw(){
+        let l = textSizes.length;
+        for(let i=0;i<l;i++){
+            let x = 50+10*i;
+            let y = 50+10*i;
+            textSize(this.textSizes[i]);
+            text(this.Strs[i],x,y);
+        }
+    }
 }
 
 function init(){
     mode = 0;
     cnt = 0;
     xhr = new XMLHttpRequest();
-
+    Vt = new VoiceText();
 }
 
 function setup(){
     let canvas = createCanvas(1280,800);
     canvas.parent('result');
     init();
+    Vt.draw();
     frameRate(30);
 }
 
