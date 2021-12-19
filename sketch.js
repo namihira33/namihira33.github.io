@@ -3,7 +3,7 @@ let dish_images = new Array(5);
 let mask_images = new Array(5);
 let bgs = new Array(2);
 let mode;
-let cnt;
+let cnt,recframe;
 let xhr;
 let heartrate;
 let sushi_clicked = [0,0,0,0,0];
@@ -28,7 +28,9 @@ function parseResult() {
     text(resultString,30,30+cnt*25,width-30,height-30);
     var str_size = myRec.resultString.length;
     console.log(str_size);
+    temp.push(str_size);
     console.log(temp);
+    console.log(30 * str_size / recframe );
   
   
     // javascript native な記述
@@ -50,14 +52,13 @@ function parseResult() {
   
     // 音声認識アクティベート
     if (is_recognition_activated == true) {
-      myRec.rec.lang = "ja"; // 日本語認識
-      myRec.start(); // 認識スタート
+      myRec.rec.lang = "ja"; 
+      myRec.start(); 
+      recframe = 0;
       }
-    // 音声認識を停止させる
     else {
       // 音声認識をとめる
       myRec.rec.stop();
-      // ボタンの表示をstartにする
     }
   }
   
@@ -147,6 +148,7 @@ class VoiceText{
 function init(){
     mode = 0;
     cnt = 0;
+    recframe = 0;
     textFont(myfont);
     xhr = new XMLHttpRequest();
     Vt = new VoiceText();
@@ -282,6 +284,8 @@ function draw(){
     }
     //mode2なら音声可視化画面
     else if(mode == 2){
+        //デザイン
+
         text('音声画面スタート',100,100);
         fill(252,252,252,255*0.78);
         rect(1056,47,196,560);
@@ -307,6 +311,11 @@ function draw(){
         image(sushi_images[0],1105,115,100,100);
         fill(255);
         ellipse(1150,255,52,52);
+
+        //音声認識のフレームカウント
+        if(is_recognition_activated){
+            recframe += 1;
+        }
 
 
 
