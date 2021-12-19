@@ -34,16 +34,25 @@ class VoiceText{
         this.textSizes = [30,20,10,30];
         console.log(this.textSizes);
         this.Strs = ['き','ら','き','ら'];
-        this.cnt = 0;
+        this.width = 200;
+        this.cnt = 0; //テキストが今何文字まで書かれているか。
     }
 
-    draw(){
+    draw_n(n){
+        let temp_sum = 0;
+        for(let i=0;i<n-1;i++){
+            temp_sum += this.textSizes[i];
+        }
+        textSize(this.textSizes[n]);
+        let x = (temp_sum %this.width);
+        let y = Math.floor((temp_sum / this.width));
+        text(this.Strs[n],x,y*100);
+    }
+
+    draw_all(){
         let l = this.textSizes.length;
         for(let i=0;i<l;i++){
-            let x = 50+10*i;
-            let y = 50+10*i;
-            textSize(this.textSizes[i]);
-            text(this.Strs[i],x,y);
+            this.draw_n(i);
         }
     }
 }
@@ -59,7 +68,7 @@ function setup(){
     let canvas = createCanvas(1280,800);
     canvas.parent('result');
     init();
-    Vt.draw();
+    Vt.draw_all();
     frameRate(30);
 }
 
