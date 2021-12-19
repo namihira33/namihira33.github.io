@@ -21,11 +21,10 @@ function parseResult() {
     // now_str.length - prev_dtr.length
     // 正なら表示
     result_str = myRec.resultString
+    //result_str.push(myRec.resultString);
     str_size = myRec.resultString.length;
     temp.push(str_size);
-    console.log(temp);
-    console.log(30 * str_size / recframe );
-    console.log(recframe);
+    console.log(result_str);
   
   }
   
@@ -137,7 +136,7 @@ function init(){
     cnt = 0;
     recframe = 0;
     str_size = 0;
-    result_string = '';
+    result_str = '';
     textFont(myfont);
     xhr = new XMLHttpRequest();
     Vt = new VoiceText();
@@ -309,7 +308,7 @@ function draw(){
         textSize(16);
         text(30*str_size/recframe,100,300);
         text(recframe,100,400);
-        text(result_string,824,47,284,600);
+        text(result_str,824,47,284,600);
         text(43*id,100,100);
         text(max,100,200);
 
