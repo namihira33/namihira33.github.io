@@ -118,7 +118,7 @@ function draw(){
     if(mode == 0){
 
         //FFT解析
-        letspectrum =fft.analyze();
+        let spectrum =fft.analyze();
         //結果をグラフで描画
         beginShape();
         for(i =0; i <spectrum.length; i++) {
