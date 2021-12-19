@@ -23,9 +23,8 @@ function parseResult() {
   
     textSize(16);
     resultString = myRec.resultString
-    resultString = conv_text(resultString,16);
     background(255);
-    text(resultString,30,30+cnt*25,width-30,height-30);
+    text(resultString,824,47,284,600);
     var str_size = myRec.resultString.length;
     temp.push(str_size);
     console.log(temp);
