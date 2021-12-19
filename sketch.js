@@ -62,6 +62,7 @@ function init(){
     cnt = 0;
     xhr = new XMLHttpRequest();
     Vt = new VoiceText();
+    Vt.init();
 }
 
 function setup(){
