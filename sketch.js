@@ -46,6 +46,8 @@ class VoiceText{
         textSize(this.textSizes[n]);
         let x = (temp_sum %this.width);
         let y = Math.floor((temp_sum / this.width));
+        console.log(x);
+        console.log(y);
         text(this.Strs[n],x,y*100);
     }
 
