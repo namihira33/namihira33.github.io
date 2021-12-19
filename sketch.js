@@ -101,7 +101,7 @@ function preload(){
     star = loadImage('images/star.png');
     material = loadImage('images/material.png');
     myfont = loadFont('fonts/SawarabiGothic-Regular.ttf');
-    sound = loadSound('sounds/melonsoda.wav');
+    //sound = loadSound('sounds/melonsoda.wav');
 }
 
 class VoiceText{
@@ -308,6 +308,7 @@ function draw(){
         textSize(16);
         text(30*str_size/recframe,100,300);
         text(recframe,100,400);
+        result_str = conv_text(result_str);
         text(result_str,824,52,228,560);
         text(43*id,100,100);
         text(max,100,200);
