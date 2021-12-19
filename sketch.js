@@ -116,9 +116,6 @@ function draw(){
 
     //mode0ならタイトル画面
     if(mode == 0){
-
-        stroke(255);
-        noFill();
         //FFT解析
         let spectrum =fft.analyze();
         //結果をグラフで描画
@@ -131,13 +128,14 @@ function draw(){
                     max = spectrum[i];
                     index = i;
                 }
-            console.log(43*i);
+            console.log(43*index);
             console.log(max);
             //let x = map(i, 0, spectrum.length-1, 0, width);
             //let y = map(spectrum[i], 0, 255, height, 0);
             }
         }
         
+        /*
         alpha = 122.5 + 122.5*sin(pi/(5*index));
         textSize(20);
         fill(0,0,0,alpha);
@@ -157,7 +155,7 @@ function draw(){
             x = reflect(x);
             let y = 200*sin(pi/360*x) + 400;
             image(sushi_images[i],x,y,50,50);
-        } 
+        } */
     }
 
     //mode1なら寿司選択画面
