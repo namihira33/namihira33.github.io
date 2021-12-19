@@ -124,8 +124,6 @@ function draw(){
             console.log(spectrum);
         }
         //結果をグラフで描画
-        stroke(255);
-        noFill();
         for(let i =0; i <spectrum.length; i++) {
             let x = map(i, 0, spectrum.length-1, 0, width);
             let y = map(spectrum[i], 0, 255, height, 0);
