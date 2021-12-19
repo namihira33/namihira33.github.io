@@ -8,7 +8,7 @@ let heartrate;
 let sushi_clicked = [0,0,0,0,0];
 let sushi_names = [];
 let rectsize;
-let bg,star,tumami,heart,material,Vt;
+let bg,star,tumami,heart,material,Vt,myfont;
 let pi = 3.14159;
 
 function preload(){
@@ -26,7 +26,7 @@ function preload(){
     tumami = loadImage('images/tumami.png');
     star = loadImage('images/star.png');
     material = loadImage('images/material.png');
-    textFont('SawarabiGothic-Regular');
+    myfont = loadFont('SawarabiGothic-Regular');
 }
 
 class VoiceText{
@@ -60,6 +60,7 @@ class VoiceText{
 function init(){
     mode = 0;
     cnt = 0;
+    textFont(myfont);
     xhr = new XMLHttpRequest();
     Vt = new VoiceText();
     Vt.init();
