@@ -8,7 +8,7 @@ let heartrate;
 let sushi_clicked = [0,0,0,0,0];
 let sushi_names = [];
 let rectsize;
-let bg,star,tumami,heart,material,Vt,myfont,sound,fft;
+let bg,star,tumami,heart,material,Vt,myfont,sound,fft,spectrum;
 let pi = 3.14159;
 
 function preload(){
@@ -118,7 +118,6 @@ function draw(){
     if(mode == 0){
 
         //FFT解析
-        let spectrum;
         if(!cnt%90){
             spectrum =fft.analyze();
             console.log(spectrum);
