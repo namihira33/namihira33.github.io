@@ -26,7 +26,7 @@ function preload(){
     tumami = loadImage('images/tumami.png');
     star = loadImage('images/star.png');
     material = loadImage('images/material.png');
-    myfont = loadFont('SawarabiGothic-Regular');
+    myfont = loadFont('fonts/SawarabiGothic-Regular.ttf');
 }
 
 class VoiceText{
