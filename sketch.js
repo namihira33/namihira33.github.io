@@ -27,10 +27,12 @@ function parseResult() {
     background(255);
     text(resultString,30,30+cnt*25,width-30,height-30);
     var str_size = myRec.resultString.length;
-    console.log(str_size);
     temp.push(str_size);
     console.log(temp);
     console.log(30 * str_size / recframe );
+    console.log(recframe);
+    text(30*str_size/recframe,100,300);
+    text(recframe,100,400);
   
   }
   
@@ -297,16 +299,18 @@ function draw(){
         let spectrum =fft.analyze();
         //結果をグラフで描画
         let max = -10000;
-        let index;
+        let id;
         for(i =0; i <spectrum.length; i++) {
             if((0<i) && (i<12)){
                 //ミトちゃんの声の音高の中で最大のものを抜き出し。 indexも保存
                 if(max<spectrum[i]){
                     max = spectrum[i];
-                    index = i;
+                    id = i;
                 }
-            console.log(43*index);
+            console.log(43*id);
             console.log(max);
+            text(43*id,100,100);
+            text(max,100,200);
             //let x = map(i, 0, spectrum.length-1, 0, width);
             //let y = map(spectrum[i], 0, 255, height, 0);
                 }
