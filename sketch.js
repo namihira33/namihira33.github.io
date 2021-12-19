@@ -1,4 +1,5 @@
 let sushi_images = new Array(5);
+let dish_images = new Array(5);
 let mask_images = new Array(5);
 let bgs = new Array(2);
 let mode;
@@ -284,6 +285,7 @@ function draw(){
         text('音声画面スタート',100,100);
         fill(252,252,252,255*0.78);
         rect(1056,47,196,560);
+        rect(824,47,228,560);
         fill(0);
         textSize(13);
         text('Your Voice Rank',1104,74);
