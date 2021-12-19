@@ -27,7 +27,7 @@ function preload(){
     star = loadImage('images/star.png');
     material = loadImage('images/material.png');
     myfont = loadFont('fonts/SawarabiGothic-Regular.ttf');
-    sound = loadSound('sounds/sound.mp3');
+    sound = loadSound('sounds/melonsoda.wav');
 }
 
 class VoiceText{
@@ -117,9 +117,9 @@ function draw(){
     //mode0ならタイトル画面
     if(mode == 0){
 
-        background(0);
-        stroke(255);
-        noFill();
+        //background(0);
+        //stroke(255);
+        //noFill();
         //FFT解析
         //let spectrum =fft.analyze();
         //結果をグラフで描画
