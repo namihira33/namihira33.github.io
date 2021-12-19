@@ -8,8 +8,92 @@ let heartrate;
 let sushi_clicked = [0,0,0,0,0];
 let sushi_names = [];
 let rectsize;
-let bg,star,tumami,heart,material,Vt,myfont,sound,fft,spectrum;
+let bg,star,tumami,heart,material,Vt,myfont,sound,fft,spectrum,myRec;
 let pi = 3.14159;
+
+function parseResult() {
+
+    // ここで音の速さの計算
+    // prev_str = ''
+    // now_str = ''
+    // now_str.length - prev_dtr.length
+    // 正なら表示
+  
+    textSize(16);
+    resultString = myRec.resultString
+    resultString = conv_text(resultString,16);
+    background(255);
+    text(resultString,30,30+cnt*25,width-30,height-30);
+    var str_size = myRec.resultString.length;
+    console.log(str_size);
+  
+  
+    // javascript native な記述
+    // document.getElementById("label").innerHTML = "speaking...";
+    //select('#label').html("speaking...");
+    
+    // javascritp native な記述
+    // document.getElementById("text").value = myRec.resultString;
+    //select('#text').value(myRec.resultString);
+  }
+  
+  function toggleSpeechRecognition() {
+    
+    // 認識ステータスを反転させる（trueならfalse，falseならtrue）
+    is_recognition_activated = !is_recognition_activated;
+  
+    cnt = 0;
+    timer = 0;
+  
+    // 音声認識アクティベート
+    if (is_recognition_activated == true) {
+      myRec.rec.lang = "ja"; // 日本語認識
+      myRec.start(); // 認識スタート
+      }
+    // 音声認識を停止させる
+    else {
+      // 音声認識をとめる
+      myRec.rec.stop();
+      // ボタンの表示をstartにする
+    }
+  }
+  
+  function endSpeech() {
+    
+    // 音声認識アクティベート中なら
+    if (is_recognition_activated == true) {
+      
+      // 認識文字列に何も入っていなければ（タイムアウトでendSpeechになった場合）
+      if (!myRec.resultValue) {
+        myRec.start();
+        return;
+      }
+      
+      // 認識文字列になんか入ってれば
+      if (myRec.resultString.length > 0) {
+        console.log("End");
+        myRec.resultString = "";
+        console.log(myRec)
+      }
+      myRec.start(); // start engine
+      console.log("start");
+    }
+  }
+
+  
+  function conv_text(sliceStr,wCount){
+    var addBreakStr = "";
+    var restStr = "";
+    for (var i = 0; i < sliceStr.length / wCount; i++) {
+      str1 = sliceStr.slice(0, wCount);
+      str2 = sliceStr.slice(wCount);
+      addBreakStr += str1 + '\n';
+      sliceStr = str2;
+      restStr = sliceStr;
+    }
+    return (addBreakStr+restStr);
+  }
+  
 
 function preload(){
     let sushi_names = ['images/maguro.png','images/ikura.png','images/ebi.png','images/tamago.png','images/kappa.png'];
@@ -64,6 +148,14 @@ function init(){
     xhr = new XMLHttpRequest();
     Vt = new VoiceText();
     Vt.init();
+    myRec = new p5.SpeechRec(); 
+    // スピーチの切れ目があったときに呼び出す関数を登録
+    myRec.onEnd = endSpeech;
+    myRec.onResult = parseResult;
+    myRec.continuous = false;
+    myRec.interimResults = true; // 読み上げている最中の認識途中の文字列も利用する場合
+    is_recognition_activated = false; 
+    myRec.rec.lang = "ja";   // 認識言語は日本語
 }
 
 function setup(){
@@ -116,6 +208,7 @@ function draw(){
 
     //mode0ならタイトル画面
     if(mode == 0){
+        /*
         if((cnt%90)==0){
         //FFT解析
         let spectrum =fft.analyze();
@@ -135,9 +228,8 @@ function draw(){
             //let y = map(spectrum[i], 0, 255, height, 0);
                 }
             }
-        }
+        }*/
         
-        /*
         alpha = 122.5 + 122.5*sin(pi/(5*index));
         textSize(20);
         fill(0,0,0,alpha);
@@ -157,7 +249,7 @@ function draw(){
             x = reflect(x);
             let y = 200*sin(pi/360*x) + 400;
             image(sushi_images[i],x,y,50,50);
-        } */
+        }
     }
 
     //mode1なら寿司選択画面
@@ -288,5 +380,9 @@ function mouseClicked(){
                     sushi_clicked[4] = toggle(sushi_clicked[4]);
                 }
             }
+        }
+
+        else if(mode == 2){
+            toggleSpeechRecognition();
         }
 }
