@@ -70,7 +70,6 @@ function setup(){
     let canvas = createCanvas(1280,800);
     canvas.parent('result');
     init();
-    Vt.draw_all();
     frameRate(30);
 }
 
@@ -114,6 +113,7 @@ function draw(){
 
     //mode0ならタイトル画面
     if(mode == 0){
+        Vt.draw_all();
         alpha = 122.5 + 122.5*sin(pi/(5*index));
         textSize(20);
         fill(0,0,0,alpha);
