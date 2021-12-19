@@ -20,7 +20,7 @@ function parseResult() {
     // now_str = ''
     // now_str.length - prev_dtr.length
     // 正なら表示
-  
+    fill(0);
     textSize(16);
     resultString = myRec.resultString
     background(255);
@@ -292,7 +292,8 @@ function draw(){
         }
 
         //0.5病に1回フーリエ解析でピッチと音量を出す
-
+        let max = -10000;
+        let id;
         if((cnt%90)==0){
         //FFT解析
         let spectrum =fft.analyze();
@@ -308,13 +309,14 @@ function draw(){
                 }
             console.log(43*id);
             console.log(max);
-            text(43*id,100,100);
-            text(max,100,200);
+            fill(0);
             //let x = map(i, 0, spectrum.length-1, 0, width);
             //let y = map(spectrum[i], 0, 255, height, 0);
                 }
             }
         }
+        text(43*id,100,100);
+        text(max,100,200);
 
 
 
