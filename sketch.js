@@ -66,7 +66,7 @@ function init(){
     Vt.init();
     sound.loop();
     fft = new p5.FFT();
-    fft.soundInput(sound);
+    fft.setInput(sound);
 }
 
 function setup(){
@@ -130,7 +130,6 @@ function draw(){
         }
         endShape();
 
-        Vt.draw_all();
         alpha = 122.5 + 122.5*sin(pi/(5*index));
         textSize(20);
         fill(0,0,0,alpha);
