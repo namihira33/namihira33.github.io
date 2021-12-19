@@ -118,7 +118,7 @@ function draw(){
     if(mode == 0){
 
         //FFT解析
-        if(!cnt%90){
+        if(!(cnt%90)){
             spectrum =fft.analyze();
             console.log(spectrum);
         }
