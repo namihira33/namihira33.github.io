@@ -309,7 +309,7 @@ function draw(){
         textSize(16);
         text(30*str_size/recframe,100,300);
         text(recframe,100,400);
-        text(resultString,824,47,284,600);
+        text(result_string,824,47,284,600);
         text(43*id,100,100);
         text(max,100,200);
 
