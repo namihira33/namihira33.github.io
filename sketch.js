@@ -64,15 +64,15 @@ function init(){
     xhr = new XMLHttpRequest();
     Vt = new VoiceText();
     Vt.init();
-    sound.loop();
-    fft = new p5.FFT();
-    fft.setInput(sound);
 }
 
 function setup(){
     let canvas = createCanvas(1280,800);
     canvas.parent('result');
     init();
+    sound.loop();
+    fft = new p5.FFT();
+    fft.setInput(sound);
     frameRate(30);
 }
 
