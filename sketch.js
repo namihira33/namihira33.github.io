@@ -116,6 +116,7 @@ function draw(){
 
     //mode0ならタイトル画面
     if(mode == 0){
+        if((cnt%90)==0){
         //FFT解析
         let spectrum =fft.analyze();
         //結果をグラフで描画
@@ -132,6 +133,7 @@ function draw(){
             console.log(max);
             //let x = map(i, 0, spectrum.length-1, 0, width);
             //let y = map(spectrum[i], 0, 255, height, 0);
+                }
             }
         }
         
