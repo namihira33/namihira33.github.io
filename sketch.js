@@ -70,7 +70,7 @@ function setup(){
     let canvas = createCanvas(1280,800);
     canvas.parent('result');
     init();
-    sound.loop();
+    sound.play();
     //fft = new p5.FFT();
     //fft.setInput(sound);
     frameRate(30);
