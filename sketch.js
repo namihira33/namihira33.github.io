@@ -27,7 +27,7 @@ function preload(){
     star = loadImage('images/star.png');
     material = loadImage('images/material.png');
     myfont = loadFont('fonts/SawarabiGothic-Regular.ttf');
-    sound = loadSound('sounds/melonsoda.wav');
+    sound = loadSound('sounds/sound.mp3');
 }
 
 class VoiceText{
