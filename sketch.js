@@ -126,7 +126,7 @@ function draw(){
         for(let i =0; i <spectrum.length; i++) {
             let x = map(i, 0, spectrum.length-1, 0, width);
             let y = map(spectrum[i], 0, 255, height, 0);
-            rect(x*20,10,20,y);
+            rect(x*2,10,2,y);
         }
 
         alpha = 122.5 + 122.5*sin(pi/(5*index));
