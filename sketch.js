@@ -9,7 +9,7 @@ let heartrate;
 let sushi_clicked = [0,0,0,0,0];
 let sushi_names = [];
 let rectsize;
-let bg,star,tumami,heart,material,Vt,myfont,sound,fft,spectrum,myRec;
+let bg,star,tumami,heart,material,Vt,myfont,sound,fft,spectrum,myRec,mic;
 let pi = 3.14159;
 let temp = [];
 
@@ -32,14 +32,6 @@ function parseResult() {
     console.log(temp);
     console.log(30 * str_size / recframe );
   
-  
-    // javascript native な記述
-    // document.getElementById("label").innerHTML = "speaking...";
-    //select('#label').html("speaking...");
-    
-    // javascritp native な記述
-    // document.getElementById("text").value = myRec.resultString;
-    //select('#text').value(myRec.resultString);
   }
   
   function toggleSpeechRecognition() {
@@ -79,7 +71,7 @@ function parseResult() {
         myRec.resultString = "";
         console.log(myRec)
       }
-      myRec.start(); // start engine
+      myRec.start();
       console.log("start");
     }
   }
@@ -153,6 +145,7 @@ function init(){
     xhr = new XMLHttpRequest();
     Vt = new VoiceText();
     Vt.init();
+    mic = new p5.AudioIn();
     myRec = new p5.SpeechRec(); 
     // スピーチの切れ目があったときに呼び出す関数を登録
     myRec.onEnd = endSpeech;
@@ -167,9 +160,7 @@ function setup(){
     let canvas = createCanvas(1280,800);
     canvas.parent('result');
     init();
-    sound.loop();
-    fft = new p5.FFT();
-    fft.setInput(sound);
+//    sound.loop();
     frameRate(30);
 }
 
@@ -213,27 +204,6 @@ function draw(){
 
     //mode0ならタイトル画面
     if(mode == 0){
-        /*
-        if((cnt%90)==0){
-        //FFT解析
-        let spectrum =fft.analyze();
-        //結果をグラフで描画
-        let max = -10000;
-        let index;
-        for(i =0; i <spectrum.length; i++) {
-            if((0<i) && (i<12)){
-                //ミトちゃんの声の音高の中で最大のものを抜き出し。 indexも保存
-                if(max<spectrum[i]){
-                    max = spectrum[i];
-                    index = i;
-                }
-            console.log(43*index);
-            console.log(max);
-            //let x = map(i, 0, spectrum.length-1, 0, width);
-            //let y = map(spectrum[i], 0, 255, height, 0);
-                }
-            }
-        }*/
         
         alpha = 122.5 + 122.5*sin(pi/(5*index));
         textSize(20);
@@ -279,6 +249,9 @@ function draw(){
  //       image(sushi_images[i],start_x+(i%3)*100,start_y+(index)*100,100,100);
         }
         if(sushi_names.length >= 5){
+            mic.start();
+            fft = new p5.FFT();
+            fft.setInput(mic);
             mode = 2;
         }
     }
@@ -315,6 +288,29 @@ function draw(){
         //音声認識のフレームカウント
         if(is_recognition_activated){
             recframe += 1;
+        }
+
+        //0.5病に1回フーリエ解析でピッチと音量を出す
+
+        if((cnt%90)==0){
+        //FFT解析
+        let spectrum =fft.analyze();
+        //結果をグラフで描画
+        let max = -10000;
+        let index;
+        for(i =0; i <spectrum.length; i++) {
+            if((0<i) && (i<12)){
+                //ミトちゃんの声の音高の中で最大のものを抜き出し。 indexも保存
+                if(max<spectrum[i]){
+                    max = spectrum[i];
+                    index = i;
+                }
+            console.log(43*index);
+            console.log(max);
+            //let x = map(i, 0, spectrum.length-1, 0, width);
+            //let y = map(spectrum[i], 0, 255, height, 0);
+                }
+            }
         }
 
 
