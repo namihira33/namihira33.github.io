@@ -8,7 +8,7 @@ let heartrate;
 let sushi_clicked = [0,0,0,0,0];
 let sushi_names = [];
 let rectsize;
-let bg,star,tumami,heart,material,Vt,myfont;
+let bg,star,tumami,heart,material,Vt,myfont,sound,fft;
 let pi = 3.14159;
 
 function preload(){
@@ -27,6 +27,7 @@ function preload(){
     star = loadImage('images/star.png');
     material = loadImage('images/material.png');
     myfont = loadFont('fonts/SawarabiGothic-Regular.ttf');
+    sound = loadSound('sounds/melonsoda.wav');
 }
 
 class VoiceText{
@@ -63,6 +64,9 @@ function init(){
     xhr = new XMLHttpRequest();
     Vt = new VoiceText();
     Vt.init();
+    sound.loop();
+    fft = new p5.FFT();
+    fft.soundInput(sound);
 }
 
 function setup(){
@@ -112,6 +116,20 @@ function draw(){
 
     //mode0ならタイトル画面
     if(mode == 0){
+
+        //FFT解析
+        letspectrum =fft.analyze();
+        //結果をグラフで描画
+        beginShape();
+        for(i =0; i <spectrum.length; i++) {
+            console.log(spectrum);
+            console.log(spectrum.length);
+            let x = map(i, 0, spectrum.length-1, 0, width);
+            let y = map(spectrum[i], 0, 255, height, 0);
+            vertex(x, y);
+        }
+        endShape();
+
         Vt.draw_all();
         alpha = 122.5 + 122.5*sin(pi/(5*index));
         textSize(20);
