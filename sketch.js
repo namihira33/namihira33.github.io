@@ -116,8 +116,7 @@ function draw(){
 
     //mode0ならタイトル画面
     if(mode == 0){
-
-        background(0);
+        
         stroke(255);
         noFill();
         //FFT解析
@@ -130,7 +129,7 @@ function draw(){
         vertex(x, y);
         }
         endShape();
-        /*
+        
         alpha = 122.5 + 122.5*sin(pi/(5*index));
         textSize(20);
         fill(0,0,0,alpha);
@@ -150,7 +149,7 @@ function draw(){
             x = reflect(x);
             let y = 200*sin(pi/360*x) + 400;
             image(sushi_images[i],x,y,50,50);
-        } */
+        } 
     }
 
     //mode1なら寿司選択画面
