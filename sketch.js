@@ -9,7 +9,9 @@ let heartrate;
 let sushi_clicked = [0,0,0,0,0];
 let sushi_names = [];
 let rectsize;
-let bg,star,tumami,heart,material,Vt,myfont,sound,fft,spectrum,myRec,mic,max,id,result_str,str_size,recframe;
+let maxid,max,is_mic_activated;
+let bg,star,tumami,heart,material,Vt,myfont,sound,fft,spectrum,myRec,mic,id,result_str,str_size,recframe;
+let tumamix1,tumamix2;
 let pi = 3.14159;
 let temp = [];
 
@@ -23,24 +25,36 @@ function parseResult() {
     result_str = myRec.resultString
     //result_str.push(myRec.resultString);
     str_size = myRec.resultString.length;
+    /*console.log(Vt.Strs);
+    console.log(Vt.now_cnt);
+    console.log(str_size);
+    console.log(result_str);
+    console.log(Vt); */
 
     // 新しい文字が入力されたとき
-    if(Vt.this_cnt < str_size){
+    if(Vt.now_cnt < str_size){
         //文字を追加
-        for(let i=Vt.this_cnt;i<str_size;i++){
+        for(let i=Vt.now_cnt;i<str_size;i++){
+            //let volume = mic.getLevel();
             let volume = 18;
+            //console.log(volume);
+            //let change_sound_volume = map(5*volume,0,1,10,40);
             Vt.textSizes.push(volume);
-            Vt.Strs.push(result_str.substring(i,i+1));
+            let ids = Vt.cnt + i;
+            Vt.Strs += result_str.substring(i,i+1);
             let temp_sum = 0;
             for(let j=0;j<i;j++){
                 temp_sum += Vt.textSizes[j];
             }
-            Vt.x.push(temp_sum%Vt.width);
-            if(i<=1){
+            Vt.x.push(829 + temp_sum%Vt.width);
+            if(i<=1 && Vt.cnt == 0){
                 Vt.y.push(0);
             }
+            else if(i==0){
+                Vt.y.push(Vt.y[Vt.y.length-1]+1);
+            }
             else if(Vt.width < temp_sum){
-                let temp_y = Math.floor(temp_sum/Vt.width);
+                let temp_y = (Vt.y[Vt.cnt]) + Math.floor((temp_sum)/Vt.width);
                 Vt.y.push(temp_y);
             }
             else
@@ -51,19 +65,32 @@ function parseResult() {
             
 
         }
-        console.log(Vt.Strs);
+        Vt.now_cnt = str_size;
         
     }
-    else if(Vt.this_cnt == str_size){
+    else if(Vt.now_cnt == str_size){
         //Stay
     }
     else{
         //音声文字の入力が途絶えたとき 次の入力を1行下に。
+
         
     }
     temp.push(str_size);
     console.log(result_str);
   
+  }
+
+  function togglemic(){
+    is_mic_activated = !is_mic_activated;
+    if (is_mic_activated == true) {
+        mic.start();
+        fft.setInput(mic);
+        }
+      else {
+        // 音声認識をとめる
+        mic.stop();
+      }
   }
   
   function toggleSpeechRecognition() {
@@ -99,6 +126,11 @@ function parseResult() {
       
       // 認識文字列になんか入ってれば
       if (myRec.resultString.length > 0) {
+        if(Vt.now_cnt == myRec.resultString.length){
+            Vt.cnt += Vt.now_cnt;
+            Vt.now_cnt = 0;
+        }
+        console.log(Vt.cnt);
         console.log("End");
         myRec.resultString = "";
         console.log(myRec)
@@ -145,12 +177,13 @@ function preload(){
 class VoiceText{
     init(){
         this.textSizes = [];
-        this.Strs = [];
+        this.Strs = '';
         this.x = [];  //i文字目のx座標
         this.y = [];  //i文字目のy座標
-        this.width = 228;
+        this.width = 214;
         this.now_cnt = 0; //今の認識で何文字目まで書かれているか。
         this.cnt = 0; //テキストが今何文字まで書かれているか。
+        this.pause = 0; //音声が何回途絶えたか。
     }
 
     draw_n(n){
@@ -163,7 +196,7 @@ class VoiceText{
         let y = Math.floor((temp_sum / this.width)); */
 
         textSize(this.textSizes[n]);
-        text(this.Strs[n],this.x[n],(this.y[n]*100+100));
+        text(this.Strs[n],this.x[n],(this.y[n]*40 + 70));
     }
 
     draw_all(){
@@ -179,6 +212,9 @@ function init(){
     cnt = 0;
     recframe = 0;
     str_size = 0;
+    tumamix1 = 1140;
+    tumamix2 = 1140;
+    max = -10000;
     result_str = '';
     textFont(myfont);
     xhr = new XMLHttpRequest();
@@ -192,6 +228,7 @@ function init(){
     myRec.continuous = false;
     myRec.interimResults = true; // 読み上げている最中の認識途中の文字列も利用する場合
     is_recognition_activated = false; 
+    is_mic_activated = false;
     myRec.rec.lang = "ja";   // 認識言語は日本語
 }
 
@@ -287,10 +324,8 @@ function draw(){
  //       let index = Math.floor(i/3);
  //       image(sushi_images[i],start_x+(i%3)*100,start_y+(index)*100,100,100);
         }
-        if(sushi_names.length >= 5){
-            mic.start();
+        if(sushi_names.length >= 5){            
             fft = new p5.FFT();
-            fft.setInput(mic);
             mode = 2;
         }
     }
@@ -315,10 +350,10 @@ function draw(){
         fill(255);
         rect(1094,503,122,13);
         image(star,1155,503,10,10);
-        image(tumami,1140,500,18,18);
+        image(tumami,tumamix1,500,18,18);
         rect(1094,555,122,13);
         image(star,1155,555,10,10);
-        image(tumami,1140,552,18,18);
+        image(tumami,tumamix2,552,18,18);
         image(material,1055,85,200,180);
         image(sushi_images[0],1105,115,100,100);
         fill(255);
@@ -329,33 +364,41 @@ function draw(){
             recframe += 1;
         }
 
-        //0.5病に1回フーリエ解析でピッチと音量を出す
-        if((cnt%90)==0){
+        //5フレームに1回フーリエ解析でピッチと音量を出す
+        if((cnt%15)==0){
+        fft.setInput(mic);
         //FFT解析
         let spectrum =fft.analyze();
-        for(i =0; i <spectrum.length; i++) {
-            if((0<i) && (i<12)){
+        for(i=0; i <spectrum.length; i++) {
+            if((0<i) && (i<18)){
                 //ミトちゃんの声の音高の中で最大のものを抜き出し。 indexも保存
                 if(max<spectrum[i]){
                     max = spectrum[i];
-                    id = i;
+                    maxid = i;
                 }
-            console.log(43*id);
-            console.log(max);
+            //console.log(43*id);
+            //console.log(max);
             //let x = map(i, 0, spectrum.length-1, 0, width);
             //let y = map(spectrum[i], 0, 255, height, 0);
                 }
             }
+            console.log(spectrum);
+            tumamix2 = map(43*maxid,43,731,0,122) + 1094;
+            console.log(43*maxid);
+            console.log(tumamix2);
+            max = -10000;
         }
         fill(0);
         textSize(16);
-        text(30*str_size/recframe,100,300);
+        let speed = 30*Vt.Strs.length/recframe ;
+        tumamix1 = map(2*speed,0,14.6,0,122) + 1094;
+        text(speed,100,300);
         text(recframe,100,400);
-        result_str = conv_text(result_str,13);
-        text(result_str,824,52,228,560);
-        text(43*id,100,100);
-        text(max,100,200);
         Vt.draw_all();
+        //result_str = conv_text(result_str,13);
+        //text(result_str,824,52,228,560);
+        //text(43*id,100,100);
+        //text(max,100,200);
 
 
 
@@ -436,6 +479,6 @@ function mouseClicked(){
 
         else if(mode == 2){
             toggleSpeechRecognition();
-            //togglemic
+            togglemic()
         }
 }
