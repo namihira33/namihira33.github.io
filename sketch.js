@@ -1,14 +1,67 @@
-let sushi_images = new Array(5);
 let dish_images = new Array(5);
+let sushi_images = new Array(5);
+
+class Dish{
+    init(){
+        this.x = -200;
+        this.y = 460 ;
+        this.frame = 0;
+        this.sara = 0;
+        this.mode = 0;
+        this.sushi = 0;
+        this.speed = 0;
+    }
+    move(){
+        let t_x = this.sushi * (190+50) + 250 ;
+        this.speed = t_x / 15;
+        if(this.mode == 1){
+            if(this.frame < 15){
+                this.x += this.speed;
+                this.frame += 1;
+            }
+        }
+        else if(this.mode == 2){
+            if(this.frame < 15){
+            this.x -= this.speed;
+            this.frame += 1;
+            }
+        }
+        else if(this.mode == 3){
+            this.speed = (width+200) / 300;
+                this.x -= this.speed;
+                if(this.x < -200){
+                    this.x = width+200;
+                }
+                this.frame += 1;
+        }
+        
+    }
+    draw(){
+        if(this.mode < 3){
+        image(dish_images[this.sara],this.x,this.y,190,160);
+        }
+        else if(this.mode == 3){
+            image(dish_images[this.sara],this.x,this.y,190,160);
+            image(sushi_images[this.sushi],this.x,this.y-10,190,160);
+        }
+    }
+}
+
+
 let mask_images = new Array(5);
+let dishes = new Dish(5);
 let bgs = new Array(2);
 let mode;
 let cnt;
+let flag;
 let xhr;
 let heartrate;
 let sushi_clicked = [0,0,0,0,0];
 let sushi_names = [];
-let rectsize;
+let neta = ['鮪','イ','海','玉','河'];
+let fulneta = ['鮪','いくら','海老','玉子','河童'];
+let juni = ['1st','2nd','3rd','4th','5th'];
+let rectsize,sushi_score;
 let maxid,max,is_mic_activated;
 let bg,star,tumami,heart,material,Vt,myfont,sound,fft,spectrum,myRec,mic,id,result_str,str_size,recframe;
 let tumamix1,tumamix2;
@@ -17,14 +70,9 @@ let temp = [];
 
 function parseResult() {
 
-    // ここで音の速さの計算
-    // prev_str = ''
-    // now_str = ''
-    // now_str.length - prev_dtr.length
-    // 正なら表示
     result_str = myRec.resultString
-    //result_str.push(myRec.resultString);
     str_size = myRec.resultString.length;
+
     /*console.log(Vt.Strs);
     console.log(Vt.now_cnt);
     console.log(str_size);
@@ -37,8 +85,7 @@ function parseResult() {
         for(let i=Vt.now_cnt;i<str_size;i++){
             //let volume = mic.getLevel();
             let volume = 18;
-            //console.log(volume);
-            //let change_sound_volume = map(5*volume,0,1,10,40);
+            //volume = map(5*volume,0,1,10,40);
             Vt.textSizes.push(volume);
             let ids = Vt.cnt + i;
             Vt.Strs += result_str.substring(i,i+1);
@@ -73,7 +120,6 @@ function parseResult() {
     }
     else{
         //音声文字の入力が途絶えたとき 次の入力を1行下に。
-
         
     }
     temp.push(str_size);
@@ -160,6 +206,7 @@ function preload(){
     let bg_names = ['images/bg1.png','images/bg2.png'];
     for(let i=0;i<5;i++){
         sushi_images[i] = loadImage(sushi_names[i]);
+        dish_images[i] = loadImage('images/dish' + (i+1) + '.png');
     }
     for(let i=0;i<2;i++){
         bgs[i] = loadImage(bg_names[i]);
@@ -200,7 +247,7 @@ class VoiceText{
     }
 
     draw_all(){
-        let l = this.textSizes.length;
+        let l = this.Strs.length;
         for(let i=0;i<l;i++){
             this.draw_n(i);
         }
@@ -212,15 +259,27 @@ function init(){
     cnt = 0;
     recframe = 0;
     str_size = 0;
+    sushi_score = 0;
     tumamix1 = 1140;
     tumamix2 = 1140;
     max = -10000;
+    flag = false;
     result_str = '';
+    for(let i=0;i<5;i++){
+        dishes[i] = new Dish();
+        dishes[i].init();
+        dishes[i].sushi = i;
+        dishes[i].sara = i;
+        dishes[i].mode = 3;
+        dishes[i].x = width + 200 + i * (240);
+        //dishes[i].init();
+    }
     textFont(myfont);
     xhr = new XMLHttpRequest();
     Vt = new VoiceText();
     Vt.init();
     mic = new p5.AudioIn();
+    fft = new p5.FFT();
     myRec = new p5.SpeechRec(); 
     // スピーチの切れ目があったときに呼び出す関数を登録
     myRec.onEnd = endSpeech;
@@ -267,6 +326,7 @@ function draw(){
     if(!(cnt%270)){
 
     xhr.open('GET', 'https://jsonplaceholder.typicode.com/todos/');
+    //xhr.open('GET','http://192.168.100.1:8080');
     xhr.send();
      
     xhr.onreadystatechange = function() {
@@ -274,6 +334,7 @@ function draw(){
             
             responseJson = JSON.parse(xhr.responseText)
             heartrate = responseJson[0].userId;
+            //heartrate = responseJson[0].hr1;
             }
         }
     }
@@ -281,72 +342,103 @@ function draw(){
     //mode0ならタイトル画面
     if(mode == 0){
         
-        alpha = 122.5 + 122.5*sin(pi/(5*index));
-        textSize(20);
+        alpha = 122.5 + 122.5*sin(2*pi/(2*cnt%30));
+        textSize(22);
         fill(0,0,0,alpha);
-        text('aボタンを押してスタート.',width/2-100,height-280);
+        text('aボタンを押してスタート.',width/2-120,height/2+40);
         fill(0);
         textSize(60);
         text('タイトル',width/2-120,height/2);
+        /*
         for(let i=0;i<5;i++){
             let x = (1280 + (cnt*2) + i*50)%2560;
             x = reflect(x);
             let y = 200*sin(pi/360*x) + 400;
-            image(sushi_images[i],x,y,50,50);
+            image(sushi_images[i],x,y,100,80);
         }
 
+        
         for(let i=0;i<5;i++){
             let x = ((cnt*2) + i*50)%2560;
             x = reflect(x);
             let y = 200*sin(pi/360*x) + 400;
-            image(sushi_images[i],x,y,50,50);
+            image(sushi_images[i],x,y,100,80);
+        } */
+
+        /* 皿と寿司の移動 */
+        for(let i=0;i<5;i++){
+            dishes[i].move();
+            dishes[i].draw();
         }
+
     }
 
     //mode1なら寿司選択画面
     else if(mode == 1){
+        textSize(60);
+        text('左クリックでネタを選んでね！',width/2-420,300);
+        textSize(30);
+        text('取り消しもできるよ',width/2-160,340);
         let start_x = width/2 - 100;
         let start_y = height/2 -100;
         for(let i=0;i<5;i++){
-            let idx = Math.floor(i/3);
+            dishes[i].move();
+            dishes[i].draw();
             if(sushi_clicked[i]){
-                fill(255,0,0,90);
-                noStroke();
-                rect(start_x+(i%3)*100,start_y+(idx)*100,100,100);
-                image(sushi_images[i],start_x+(i%3)*100,start_y+(idx)*100,100,100);                       
+                //fill(255,0,0,90);
+                //noStroke();
+                //rect(i*190+50+i*50,450,190,160);
+                //image(dish_images[i],i*190+50+i*50,460,190,160);
+                image(sushi_images[i],i*190+55+i*50,440,200,170);         
             }
             else{
-                fill(255,255,255,70);
-                noStroke();
-                rect(start_x+(i%3)*100,start_y+(idx)*100,100,100);
-                image(sushi_images[i],start_x+(i%3)*100,start_y+(idx)*100,100,100);
+                //fill(255,255,255,255*0.78);
+                //noStroke();
+                //rect(i*190+50+i*50,450,190,160);
+                //image(dish_images[i],i*190+50+i*50,460,190,160);  
+                image(sushi_images[i],i*190+55+i*50,440,200,170);
             }          
  //       let index = Math.floor(i/3);
  //       image(sushi_images[i],start_x+(i%3)*100,start_y+(index)*100,100,100);
         }
-        if(sushi_names.length >= 5){            
-            fft = new p5.FFT();
-            mode = 2;
+        if(sushi_names.length >= 5){   
+            for(let j=0;j<5;j++){
+                if(dishes[j].frame < 15){
+                    break;
+                }
+                if(j==4){
+                    mode = 2;
+                }
+            }
         }
     }
     //mode2なら音声可視化画面
     else if(mode == 2){
         //デザイン
+        
 
-        text('音声画面スタート',100,100);
+
         fill(252,252,252,255*0.78);
         rect(1056,47,196,560);
         rect(824,47,228,560);
+        rect(50,47,216,560);
         fill(0);
+        for(let i=0;i<5;i++){
+            textSize(20);
+            text(juni[i],75,i*100+110);
+            text(fulneta[sushi_names[i]],75,i*100+140);
+            image(sushi_images[sushi_names[i]],150,i*(102)+85,90,65);
+        }
         textSize(13);
         text('Your Voice Rank',1104,74);
         text('Your Voice Data',1104,312);
         text('SPEED',1130,490);
         text('PITCH',1130,540);
-        let size = 50+50*sin(pi/120*(cnt%240));
-        image(heart,1149-size/2,362-size/2,size,size);
         textSize(45);
         text(heartrate,1134,452);
+        //heartrate = map(heartrate,60.5/2,121,0.5,3);
+        let size = 50+50*sin(pi/120*(cnt%240)*heartrate);
+        image(heart,1149-size/2,362-size/2,size,size);
         fill(255);
         rect(1094,503,122,13);
         image(star,1155,503,10,10);
@@ -355,19 +447,30 @@ function draw(){
         image(star,1155,555,10,10);
         image(tumami,tumamix2,552,18,18);
         image(material,1055,85,200,180);
-        image(sushi_images[0],1105,115,100,100);
+
+        let rank = Math.floor(sushi_score/10);
+        if(rank<0) rank = 0;
+        let shi = sushi_names[4-rank];
+        console.log(sushi_score);
+        image(sushi_images[shi],1105,115,100,100);
         fill(255);
         ellipse(1150,255,52,52);
+        fill(0);
+        textSize(38);
+        text(neta[shi],1130,270);
+
 
         //音声認識のフレームカウント
         if(is_recognition_activated){
             recframe += 1;
         }
-
+        fft.setInput(mic);
+        // console.log(mic);
+        // console.log(fft);
         //5フレームに1回フーリエ解析でピッチと音量を出す
         if((cnt%15)==0){
-        fft.setInput(mic);
         //FFT解析
+        max = -10000;
         let spectrum =fft.analyze();
         for(i=0; i <spectrum.length; i++) {
             if((0<i) && (i<18)){
@@ -382,23 +485,43 @@ function draw(){
             //let y = map(spectrum[i], 0, 255, height, 0);
                 }
             }
-            console.log(spectrum);
+            //console.log(spectrum);
             tumamix2 = map(43*maxid,43,731,0,122) + 1094;
-            console.log(43*maxid);
-            console.log(tumamix2);
-            max = -10000;
+            //console.log(43*maxid);
+            //console.log(tumamix2);
         }
         fill(0);
         textSize(16);
         let speed = 30*Vt.Strs.length/recframe ;
         tumamix1 = map(2*speed,0,14.6,0,122) + 1094;
-        text(speed,100,300);
-        text(recframe,100,400);
+/*      text(speed,100,300);
+        text(recframe,100,400); */
         Vt.draw_all();
         //result_str = conv_text(result_str,13);
         //text(result_str,824,52,228,560);
         //text(43*id,100,100);
         //text(max,100,200);
+
+        if(((cnt%45)==0) && flag){
+            if(abs(speed-7.0) < 3.5){
+                sushi_score += 2;
+            }
+            else{
+                sushi_score -= 1;
+            }
+            if(abs(max-387) < 193.5){
+                sushi_score += 1;
+            }
+            else{
+                sushi_score -= 1;
+            }
+            if(abs(heartrate-60.5) < 20){
+                sushi_score += 2;
+            }
+            else {
+                sushi_score -= 1;
+            }
+        }
 
 
 
@@ -409,6 +532,10 @@ function draw(){
 function keyPressed(){
     if(key == 'a'){
         if(mode == 0){
+            /* 寿司の初期化 */
+            for(let i=0;i<5;i++){
+                dishes[i].init();
+            }
             mode = 1;
         }
     }
@@ -421,64 +548,32 @@ function toggle(x){
 
 function mouseClicked(){
         if(mode == 1){
-            if((300 < mouseY) && (mouseY < 400)){
-                if((540 < mouseX) && (mouseX < 640)){
-                    // まぐろをクリックしたときの処理
-                    if(sushi_clicked[0]){                      
-                        sushi_names.pop();
+            if((440 < mouseY) && (mouseY < 610)){
+                for(let i=0;i<5;i++){
+                    if(((i*190+55+i*50) < mouseX) && (mouseX < i*190+55+i*50+200)){
+                        if(sushi_clicked[i]){                      
+                            sushi_names.pop();
+                            dishes[i].mode = 2;
+                            dishes[i].frame = 0;
+                        }
+                        else{
+                            sushi_names.push(i);
+                            dishes[i].mode = 1;
+                            dishes[i].frame = 0;
+                            dishes[i].sushi = i;
+                            dishes[i].sara = sushi_names.length-1;
+                            console.log(sushi_names);
+                        }
+                        sushi_clicked[i] = toggle(sushi_clicked[i]);
                     }
-                    else{
-                        sushi_names.push(0);
-                    }
-                    sushi_clicked[0] = toggle(sushi_clicked[0]);
                 }
-                else if((640 < mouseX) && (mouseX < 740)){
-                    // いくらをクリックしたときの処理                    
-                    if(sushi_clicked[1]){                      
-                        sushi_names.pop();
-                    }
-                    else{
-                        sushi_names.push(1);
-                    }
-                    sushi_clicked[1] = toggle(sushi_clicked[1]);
-                }
-                else if((740 < mouseX) && (mouseX < 840)){
-                    // えびをクリックしたときの処理
-                    if(sushi_clicked[2]){                     
-                        sushi_names.pop();
-                    }
-                    else{
-                        sushi_names.push(2);
-                    }
-                    sushi_clicked[2] = toggle(sushi_clicked[2]);
-                }
-            }
-            else if((400 < mouseY) && (mouseY < 500)){
-                if((540 < mouseX) && (mouseX < 640)){
-                    // たまごをクリックしたときの処理
-                    if(sushi_clicked[3]){                      
-                        sushi_names.pop();
-                    }
-                    else{
-                        sushi_names.push(3);
-                    }
-                    sushi_clicked[3] = toggle(sushi_clicked[3]);
-                }
-                else if((640 < mouseX) && (mouseX < 740)){
-                    // いくらをクリックしたときの処理
-                    if(sushi_clicked[4]){                      
-                        sushi_names.pop();
-                    }
-                    else{
-                        sushi_names.push(4);
-                    }                 
-                    sushi_clicked[4] = toggle(sushi_clicked[4]);
-                }
+
             }
         }
 
         else if(mode == 2){
             toggleSpeechRecognition();
             togglemic()
+            flag = !flag;
         }
 }
