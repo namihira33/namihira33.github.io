@@ -23,6 +23,44 @@ function parseResult() {
     result_str = myRec.resultString
     //result_str.push(myRec.resultString);
     str_size = myRec.resultString.length;
+
+    // 新しい文字が入力されたとき
+    if(Vt.this_cnt < str_size){
+        //文字を追加
+        for(let i=Vt.this_cnt;i<str_size;i++){
+            let volume = 18;
+            Vt.textSizes.push(volume);
+            Vt.Strs.push(result_str.substring(i,i+1));
+            let temp_sum = 0;
+            for(let j=0;j<i;j++){
+                temp_sum += Vt.textSizes[j];
+            }
+            Vt.x.push(temp_sum%Vt.width);
+            if(i<=1){
+                Vt.y.push(0);
+            }
+            else if(Vt.width < temp_sum){
+                let temp_y = Math.floor(temp_sum/Vt.width);
+                Vt.y.push(temp_y);
+            }
+            else
+            {
+                //行数に変化なし
+                Vt.y.push(Vt.y[Vt.y.length-1]);
+            }
+            
+
+        }
+        console.log(Vt.Strs);
+        
+    }
+    else if(Vt.this_cnt == str_size){
+        //Stay
+    }
+    else{
+        //音声文字の入力が途絶えたとき 次の入力を1行下に。
+        
+    }
     temp.push(str_size);
     console.log(result_str);
   
@@ -106,21 +144,26 @@ function preload(){
 
 class VoiceText{
     init(){
-        this.textSizes = [30,20,10,30];
-        this.Strs = ['き','ら','き','ら'];
-        this.width = 200;
+        this.textSizes = [];
+        this.Strs = [];
+        this.x = [];  //i文字目のx座標
+        this.y = [];  //i文字目のy座標
+        this.width = 228;
+        this.now_cnt = 0; //今の認識で何文字目まで書かれているか。
         this.cnt = 0; //テキストが今何文字まで書かれているか。
     }
 
     draw_n(n){
+        /*
         let temp_sum = 0;
         for(let i=0;i<n;i++){
             temp_sum += this.textSizes[i];
         }
-        textSize(this.textSizes[n]);
         let x = (temp_sum %this.width);
-        let y = Math.floor((temp_sum / this.width));
-        text(this.Strs[n],x,(y*100+100));
+        let y = Math.floor((temp_sum / this.width)); */
+
+        textSize(this.textSizes[n]);
+        text(this.Strs[n],this.x[n],(this.y[n]*100+100));
     }
 
     draw_all(){
@@ -393,5 +436,6 @@ function mouseClicked(){
 
         else if(mode == 2){
             toggleSpeechRecognition();
+            //togglemic
         }
 }
