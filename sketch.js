@@ -327,8 +327,9 @@ function draw(){
 
     if(!(cnt%270)){
 
-    xhr.open('GET', 'https://jsonplaceholder.typicode.com/todos/');
-    //xhr.open('GET','http://192.168.100.1:8080');
+    //xhr.open('GET', 'https://jsonplaceholder.typicode.com/todos/');
+    xhr.open('GET','http://192.168.100.1:8080');
+    xhr.setRequestHeader("Access-Control-Allow-Origin", "http://192.168.100.1:8080");
     xhr.send();
      
     xhr.onreadystatechange = function() {
