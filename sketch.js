@@ -63,7 +63,7 @@ let fulneta = ['鮪','いくら','海老','玉子','河童'];
 let juni = ['1st','2nd','3rd','4th','5th'];
 let rectsize,sushi_score;
 let maxid,max,is_mic_activated;
-let bg,star,tumami,heart,material,Vt,myfont,sound,fft,spectrum,myRec,mic,id,result_str,str_size,recframe;
+let bg,bg2,star,tumami,heart,material,Vt,myfont,sound,fft,spectrum,myRec,mic,id,result_str,str_size,recframe;
 let tumamix1,tumamix2;
 let pi = 3.14159;
 let temp = [];
@@ -203,7 +203,7 @@ function parseResult() {
 
 function preload(){
     let sushi_names = ['images/maguro.png','images/ikura.png','images/ebi.png','images/tamago.png','images/kappa.png'];
-    let bg_names = ['images/bg1.png','images/bg2.png'];
+    let bg_names = ['images/bg2.png','images/bg2.png'];
     for(let i=0;i<5;i++){
         sushi_images[i] = loadImage(sushi_names[i]);
         dish_images[i] = loadImage('images/dish' + (i+1) + '.png');
@@ -214,6 +214,8 @@ function preload(){
     heart = loadImage('images/heart.png');
     material = loadImage('images/material.png');
     bg = loadImage('images/bg.jpg');
+    bg2 = loadImage('images/bg2.png');
+
     tumami = loadImage('images/tumami.png');
     star = loadImage('images/star.png');
     material = loadImage('images/material.png');
@@ -320,7 +322,7 @@ function reflect(x){
 
 function draw(){
     //background(255);
-    image(bg,0,0,width,height);
+    image(bg2,0,0,width,height);
     index = cnt%30;
 
     if(!(cnt%270)){
