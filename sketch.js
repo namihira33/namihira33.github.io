@@ -65,6 +65,7 @@ let rectsize,sushi_score;
 let maxid,max,is_mic_activated;
 let bg,bg2,star,tumami,heart,material,Vt,myfont,sound,fft,spectrum,myRec,mic,id,result_str,str_size,recframe;
 let tumamix1,tumamix2;
+let txt1,txt2;
 let pi = 3.14159;
 let temp = [];
 
@@ -156,6 +157,7 @@ function parseResult() {
     else {
       // 音声認識をとめる
       myRec.rec.stop();
+      Vt.init();
     }
   }
   
@@ -219,6 +221,9 @@ function preload(){
     tumami = loadImage('images/tumami.png');
     star = loadImage('images/star.png');
     material = loadImage('images/material.png');
+    logo = loadImage('images/logo.png');
+    txt1 = loadImage('images/title_text.png');
+    txt2 = loadImage('images/select_text.png');
     myfont = loadFont('fonts/SawarabiGothic-Regular.ttf');
     //sound = loadSound('sounds/melonsoda.wav');
 }
@@ -329,15 +334,17 @@ function draw(){
 
     //xhr.open('GET', 'https://jsonplaceholder.typicode.com/todos/');
     xhr.open('GET','http://192.168.100.1:8080');
-    xhr.setRequestHeader("Access-Control-Allow-Origin", "http://192.168.100.1:8080");
+    //xhr.setRequestHeader("Access-Control-Allow-Origin", "http://192.168.100.1:8080");
     xhr.send();
      
     xhr.onreadystatechange = function() {
         if(xhr.readyState === 4 && xhr.status === 200) {
             
             responseJson = JSON.parse(xhr.responseText)
-            heartrate = responseJson[0].userId;
-            //heartrate = responseJson[0].hr1;
+            console.log(responseJson);
+            //heartrate = responseJson[0].userId;
+            heartrate = responseJson.hr1[0];
+            console.log(heartrate);
             }
         }
     }
@@ -345,13 +352,15 @@ function draw(){
     //mode0ならタイトル画面
     if(mode == 0){
         
-        alpha = 122.5 + 122.5*sin(2*pi/(2*cnt%30));
-        textSize(22);
-        fill(0,0,0,alpha);
-        text('aボタンを押してスタート.',width/2-120,height/2+40);
+        //alpha = 122.5 + 122.5*sin(2*pi/(2*cnt%30));
+        //textSize(25);
+        //fill(0,0,0,alpha);
+        //text('aボタンを押してスタート.',width/2-120,height/2+15);
+        image(txt1,width/2-195,height/2-50,415,90);
         fill(0);
-        textSize(60);
-        text('タイトル',width/2-120,height/2);
+        image(logo,width/2-400,height/2-495,800,570)
+//        textSize(60);
+//        text('タイトル',width/2-120,height/2);
         /*
         for(let i=0;i<5;i++){
             let x = (1280 + (cnt*2) + i*50)%2560;
@@ -378,10 +387,11 @@ function draw(){
 
     //mode1なら寿司選択画面
     else if(mode == 1){
-        textSize(60);
-        text('左クリックでネタを選んでね！',width/2-420,300);
-        textSize(30);
-        text('取り消しもできるよ',width/2-160,340);
+        image(txt2,width/2-420,220,900,200);
+        //textSize(60);
+        //text('左クリックでネタを選んでね！',width/2-420,300);
+        //textSize(30);
+        //text('取り消しもできるよ',width/2-160,340);
         let start_x = width/2 - 100;
         let start_y = height/2 -100;
         for(let i=0;i<5;i++){
@@ -438,9 +448,9 @@ function draw(){
         text('SPEED',1130,490);
         text('PITCH',1130,540);
         textSize(45);
-        text(heartrate,1134,452);
-        //heartrate = map(heartrate,60.5/2,121,0.5,3);
-        let size = 50+50*sin(pi/120*(cnt%240)*heartrate);
+        text(Math.floor(heartrate),1124,447);
+        let gameheartrate = map(heartrate,10,121,0.2,3);
+        let size = 50+50*sin(pi/120*(cnt%240)*gameheartrate);
         image(heart,1149-size/2,362-size/2,size,size);
         fill(255);
         rect(1094,503,122,13);
@@ -454,7 +464,6 @@ function draw(){
         let rank = Math.floor(sushi_score/10);
         if(rank<0) rank = 0;
         let shi = sushi_names[4-rank];
-        console.log(sushi_score);
         image(sushi_images[shi],1105,115,100,100);
         fill(255);
         ellipse(1150,255,52,52);
@@ -506,6 +515,7 @@ function draw(){
         //text(max,100,200);
 
         if(((cnt%45)==0) && flag){
+            console.log(result_str);
             if(abs(speed-7.0) < 3.5){
                 sushi_score += 2;
             }
@@ -516,13 +526,13 @@ function draw(){
                 sushi_score += 1;
             }
             else{
-                sushi_score -= 1;
+                //sushi_score -= 1;
             }
             if(abs(heartrate-60.5) < 20){
                 sushi_score += 2;
             }
             else {
-                sushi_score -= 1;
+                //sushi_score -= 1;
             }
         }
 
