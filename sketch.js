@@ -330,21 +330,16 @@ function draw(){
     image(bg2,0,0,width,height);
     index = cnt%30;
 
+ 
     if(!(cnt%270)){
-
-    //xhr.open('GET', 'https://jsonplaceholder.typicode.com/todos/');
     xhr.open('GET','http://192.168.100.1:8080');
-    //xhr.setRequestHeader("Access-Control-Allow-Origin", "http://192.168.100.1:8080");
     xhr.send();
      
     xhr.onreadystatechange = function() {
         if(xhr.readyState === 4 && xhr.status === 200) {
             
             responseJson = JSON.parse(xhr.responseText)
-            console.log(responseJson);
-            //heartrate = responseJson[0].userId;
             heartrate = responseJson.hr1[0];
-            console.log(heartrate);
             }
         }
     }
@@ -463,6 +458,7 @@ function draw(){
 
         let rank = Math.floor(sushi_score/10);
         if(rank<0) rank = 0;
+        if(rank>4) rank = 4;
         let shi = sushi_names[4-rank];
         image(sushi_images[shi],1105,115,100,100);
         fill(255);
@@ -517,7 +513,7 @@ function draw(){
         if(((cnt%45)==0) && flag){
             console.log(result_str);
             if(abs(speed-7.0) < 3.5){
-                sushi_score += 2;
+                sushi_score += 1;
             }
             else{
                 sushi_score -= 1;
@@ -585,8 +581,8 @@ function mouseClicked(){
         }
 
         else if(mode == 2){
+            togglemic();
             toggleSpeechRecognition();
-            togglemic()
             flag = !flag;
         }
 }
